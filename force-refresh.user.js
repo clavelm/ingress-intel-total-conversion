@@ -2,7 +2,7 @@
 // @id             iitc-plugin-force-refresh
 // @name           IITC plugin: force refresh
 // @category       Tweaks
-// @version 0.1.2
+// @version 0.1.3
 // @namespace	https://github.com/clavelm/iitc-plugins-refresh
 // @downloadURL	https://github.com/clavelm/iitc-plugins-refresh/raw/main/force-refresh.user.js
 // @homepageURL	https://github.com/clavelm/iitc-plugins-refresh
