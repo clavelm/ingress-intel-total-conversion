@@ -34,7 +34,7 @@ var setup = function() {
     var toolbar = L.DomUtil.create('div', 'leaflet-bar');
     var button = L.DomUtil.create('a', 'leaflet-refresh');
 
-    button.innerText = 'Refresh';
+    button.innerText = '🗘';
     button.onclick = function() {
         idleReset();
         window.mapDataRequest.cache = new DataCache();
