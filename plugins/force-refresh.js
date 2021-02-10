@@ -1,7 +1,7 @@
 // @author         https://github.com/balthild
 // @name           Force refresh
 // @category       Tweaks
-// @version        0.2.0
+// @version        0.2.1
 // @description    Reload intel data without refreshing the page.
 
 
