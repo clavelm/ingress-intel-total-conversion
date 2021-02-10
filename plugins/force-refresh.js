@@ -10,7 +10,7 @@ const setup = function() {
     const toolbar = L.DomUtil.create('div', 'leaflet-bar');
     const button = L.DomUtil.create('a', 'leaflet-refresh');
 
-    button.innerText = '🗘';
+    button.innerText = '↻';
     button.onclick = function() {
         idleReset();
         window.mapDataRequest.cache = new DataCache();
