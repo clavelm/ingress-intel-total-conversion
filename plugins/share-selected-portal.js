@@ -1,8 +1,8 @@
-// @author         ZasoGD
-// @name           Bookmarks for maps and portals
+// @author         Mathieu CLAVEL
+// @name           Share selected portal
 // @category       Controls
-// @version        0.4.0
-// @description    Save your favorite Maps and Portals and move the intel map with a click. Works with sync. Supports Multi-Project-Extension
+// @version        0.1.0
+// @description    Add a share link when a portal is selected
 
 /* **********************************************************************
 
