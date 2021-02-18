@@ -84,20 +84,20 @@
 
   // Update the localStorage
   window.plugin.ssp.saveStorage = function() {
-    localStorage[plugin.bookmarks.KEY_STORAGE] = JSON.stringify(window.plugin.bookmarks.bkmrksObj);
+    localStorage[plugin.ssp.KEY_STORAGE] = JSON.stringify(window.plugin.ssp.bkmrksObj);
   }
 
   // Load the localStorage
   window.plugin.ssp.loadStorage = function() {
-    window.plugin.bookmarks.bkmrksObj = JSON.parse(localStorage[plugin.bookmarks.KEY_STORAGE]);
+    window.plugin.ssp.bkmrksObj = JSON.parse(localStorage[plugin.ssp.KEY_STORAGE]);
   }
 
   window.plugin.ssp.saveStorageBox = function() {
-    localStorage[plugin.bookmarks.KEY_STATUS_BOX] = JSON.stringify(window.plugin.bookmarks.statusBox);
+    localStorage[plugin.ssp.KEY_STATUS_BOX] = JSON.stringify(window.plugin.ssp.statusBox);
   }
 
-window.plugin.ssp.loadStorageBox = function() {
-    window.plugin.bookmarks.statusBox = JSON.parse(localStorage[plugin.bookmarks.KEY_STATUS_BOX]);
+  window.plugin.ssp.loadStorageBox = function() {
+    window.plugin.ssp.statusBox = JSON.parse(localStorage[plugin.ssp.KEY_STATUS_BOX]);
   }
 
   window.plugin.ssp.upgradeToNewStorage = function() {
@@ -307,17 +307,17 @@ window.plugin.ssp.loadStorageBox = function() {
         $('.bkmrksStar').remove();
 
         if(typeof(Storage) === "undefined") {
-          $('#portaldetails > .imgpreview').after(plugin.bookmarks.htmlDisabledMessage);
+          $('#portaldetails > .imgpreview').after(plugin.ssp.htmlDisabledMessage);
           return;
         }
 
         // Prepend a star to mobile status-bar
         if(window.plugin.ssp.isSmart) {
-          $('#updatestatus').prepend(plugin.bookmarks.htmlStar);
+          $('#updatestatus').prepend(plugin.ssp.htmlStar);
           $('#updatestatus .bkmrksStar').attr('title', '');
         }
 
-        $('#portaldetails > h3.title').prepend(plugin.bookmarks.htmlStar);
+        $('#portaldetails > h3.title').prepend(plugin.ssp.htmlStar);
         window.plugin.ssp.updateStarPortal();
       }, 0);
     }
@@ -362,11 +362,11 @@ window.plugin.ssp.loadStorageBox = function() {
       // Get portal name and coordinates
       var p = window.portals[guid];
       var ll = p.getLatLng();
-      plugin.bookmarks.addPortalBookmark(guid, ll.lat+','+ll.lng, p.options.data.title);
+      plugin.ssp.addPortalBookmark(guid, ll.lat+','+ll.lng, p.options.data.title);
     }
   }
 
-  plugin.bookmarks.addPortalBookmark = function(guid, latlng, label) {
+  plugin.ssp.addPortalBookmark = function(guid, latlng, label) {
     var ID = window.plugin.ssp.generateID();
 
     // Add bookmark in the localStorage
@@ -398,7 +398,7 @@ window.plugin.ssp.loadStorageBox = function() {
       var latlng = lat+','+lng;
       var zoom = parseInt(map.getZoom());
       // Add bookmark in the localStorage
-      window.plugin.bookmarks.bkmrksObj['maps'][plugin.bookmarks.KEY_OTHER_BKMRK]['bkmrk'][ID] = {"label":label,"latlng":latlng,"z":zoom};
+      window.plugin.ssp.bkmrksObj['maps'][plugin.ssp.KEY_OTHER_BKMRK]['bkmrk'][ID] = {"label":label,"latlng":latlng,"z":zoom};
     }
     else{
       if(label === '') { label = 'Folder'; }
@@ -441,7 +441,7 @@ window.plugin.ssp.loadStorageBox = function() {
       var typeList = $(elem).parent().parent().parent().parent('div').attr('id');
       var ID = $(elem).parent().parent('li').attr('id');
 
-      delete plugin.bookmarks.bkmrksObj[typeList.replace('bkmrk_', '')][ID];
+      delete plugin.ssp.bkmrksObj[typeList.replace('bkmrk_', '')][ID];
       $(elem).parent().parent('li').remove();
       window.plugin.ssp.saveStorage();
       window.plugin.ssp.updateStarPortal();
@@ -468,7 +468,7 @@ window.plugin.ssp.loadStorageBox = function() {
     else if(type === 'portals'){ type = 2; }
 
     dialog({
-      html: window.plugin.ssp.dialogLoadListFolders('bookmarksDialogMobileSort', 'window.plugin.bookmarks.mobileSort', true, type),
+      html: window.plugin.ssp.dialogLoadListFolders('bookmarksDialogMobileSort', 'window.plugin.ssp.mobileSort', true, type),
       dialogClass: 'ui-dialog-bkmrksSet-copy',
       id: 'plugin-bookmarks-move-bookmark',
       title: 'Bookmarks - Move Bookmark'
@@ -497,7 +497,7 @@ window.plugin.ssp.loadStorageBox = function() {
   window.plugin.ssp.onSearch = function(query) {
     var term = query.term.toLowerCase();
 
-    $.each(plugin.bookmarks.bkmrksObj.maps, function(id, folder) {
+    $.each(plugin.ssp.bkmrksObj.maps, function(id, folder) {
       $.each(folder.bkmrk, function(id, bookmark) {
         if(bookmark.label.toLowerCase().indexOf(term) === -1) return;
 
@@ -512,7 +512,7 @@ window.plugin.ssp.loadStorageBox = function() {
       });
     });
 
-    $.each(plugin.bookmarks.bkmrksObj.portals, function(id, folder) {
+    $.each(plugin.ssp.bkmrksObj.portals, function(id, folder) {
       $.each(folder.bkmrk, function(id, bookmark) {
         if(bookmark.label.toLowerCase().indexOf(term) === -1) return;
 
@@ -627,7 +627,7 @@ window.plugin.ssp.loadStorageBox = function() {
   // Manual import, export and reset data
   window.plugin.ssp.manualOpt = function() {
     dialog({
-      html: plugin.bookmarks.htmlSetbox,
+      html: plugin.ssp.htmlSetbox,
       dialogClass: 'ui-dialog-bkmrksSet',
       id: 'plugin-bookmarks-options',
       title: 'Bookmarks Options'
@@ -791,7 +791,7 @@ window.plugin.ssp.loadStorageBox = function() {
 
   window.plugin.ssp.optRenameF = function() {
     dialog({
-      html: window.plugin.ssp.dialogLoadListFolders('bookmarksDialogRenameF', 'window.plugin.bookmarks.renameFolder', false, 0),
+      html: window.plugin.ssp.dialogLoadListFolders('bookmarksDialogRenameF', 'window.plugin.ssp.renameFolder', false, 0),
       dialogClass: 'ui-dialog-bkmrksSet-copy',
       id: 'plugin-bookmarks-rename-folder',
       title: 'Bookmarks Rename Folder'
@@ -960,7 +960,7 @@ window.plugin.ssp.loadStorageBox = function() {
   // Delay the syncing to group a few updates in a single request
   window.plugin.ssp.delaySync = function() {
     if (!window.plugin.ssp.enableSync || !window.plugin.ssp.IsDefaultStorageKey) return;
-    clearTimeout(plugin.bookmarks.delaySync.timer);
+    clearTimeout(plugin.ssp.delaySync.timer);
     window.plugin.ssp.delaySync.timer = setTimeout(function() {
         window.plugin.ssp.delaySync.timer = null;
         window.plugin.ssp.syncNow();
@@ -1145,14 +1145,14 @@ window.plugin.ssp.loadStorageBox = function() {
       console.log(data, data.target, data.guid);
 
       if(data.target == "portal" && data.guid) {
-        if(plugin.bookmarks.findByGuid(data.guid))
+        if(plugin.ssp.findByGuid(data.guid))
           $('[data-list-bookmark="'+data.guid+'"]').addClass("favorite");
         else
           $('[data-list-bookmark="'+data.guid+'"]').removeClass("favorite");
       } else {
         $('[data-list-bookmark]').each(function(i, element) {
           var guid = element.getAttribute("data-list-bookmark");
-          if(plugin.bookmarks.findByGuid(guid))
+          if(plugin.ssp.findByGuid(guid))
             $(element).addClass("favorite");
           else
             $(element).removeClass("favorite");
@@ -1167,8 +1167,8 @@ window.plugin.ssp.loadStorageBox = function() {
       title: "",
       value: function(portal) { return portal.options.guid; }, // we store the guid, but implement a custom comparator so the list does sort properly without closing and reopening the dialog
       sort: function(guidA, guidB) {
-        var infoA = plugin.bookmarks.findByGuid(guidA);
-        var infoB = plugin.bookmarks.findByGuid(guidB);
+        var infoA = plugin.ssp.findByGuid(guidA);
+        var infoB = plugin.ssp.findByGuid(guidB);
         if(infoA && !infoB) return 1;
         if(infoB && !infoA) return -1;
         return 0;
@@ -1184,19 +1184,19 @@ window.plugin.ssp.loadStorageBox = function() {
             window.plugin.ssp.switchStarPortal(guid);
           } else {
             var ll = portal.getLatLng();
-            plugin.bookmarks.addPortalBookmark(guid, ll.lat+','+ll.lng, portal.options.data.title);
+            plugin.ssp.addPortalBookmark(guid, ll.lat+','+ll.lng, portal.options.data.title);
           }
         }, false);
 
-        if(plugin.bookmarks.findByGuid(guid))
+        if(plugin.ssp.findByGuid(guid))
           cell.className += " favorite";
       },
     });
   }
 
   window.plugin.ssp.setupContent = function() {
-    plugin.bookmarks.htmlBoxTrigger = '<a id="bkmrksTrigger" class="open" onclick="window.plugin.ssp.switchStatusBkmrksBox(\'switch\');return false;" accesskey="v" title="[v]">[-] Bookmarks</a>';
-    plugin.bookmarks.htmlBkmrksBox = '<div id="bookmarksBox">'
+    plugin.ssp.htmlBoxTrigger = '<a id="bkmrksTrigger" class="open" onclick="window.plugin.ssp.switchStatusBkmrksBox(\'switch\');return false;" accesskey="v" title="[v]">[-] Bookmarks</a>';
+    plugin.ssp.htmlBkmrksBox = '<div id="bookmarksBox">'
                           +'<div id="topBar">'
                             +'<a id="bookmarksMin" class="btn" onclick="window.plugin.ssp.switchStatusBkmrksBox(0);return false;" title="Minimize">-</a>'
                             +'<div class="handle">...</div>'
@@ -1223,11 +1223,11 @@ window.plugin.ssp.loadStorageBox = function() {
                           +'<div style="border-bottom-width:1px;"></div>'
                         +'</div>';
 
-    plugin.bookmarks.htmlDisabledMessage = '<div title="Your browser do not support localStorage">Plugin Bookmarks disabled*.</div>';
-    plugin.bookmarks.htmlStar = '<a class="bkmrksStar" accesskey="b" onclick="window.plugin.ssp.switchStarPortal();return false;" title="Save this portal in your bookmarks [b]"><span></span></a>';
-    plugin.bookmarks.htmlCalldrawBox = '<a onclick="window.plugin.ssp.dialogDrawer();return false;" accesskey="q" title="Draw lines/triangles between bookmarked portals [q]">Auto draw</a>';
-    plugin.bookmarks.htmlCallSetBox = '<a onclick="window.plugin.ssp.manualOpt();return false;">Bookmarks Opt</a>';
-    plugin.bookmarks.htmlMoveBtn = '<a id="bookmarksMove" class="btn" onclick="window.plugin.ssp.moveMode();return false;">Show/Hide "Move" button</a>'
+    plugin.ssp.htmlDisabledMessage = '<div title="Your browser do not support localStorage">Plugin Bookmarks disabled*.</div>';
+    plugin.ssp.htmlStar = '<a class="bkmrksStar" accesskey="b" onclick="window.plugin.ssp.switchStarPortal();return false;" title="Save this portal in your bookmarks [b]"><span></span></a>';
+    plugin.ssp.htmlCalldrawBox = '<a onclick="window.plugin.ssp.dialogDrawer();return false;" accesskey="q" title="Draw lines/triangles between bookmarked portals [q]">Auto draw</a>';
+    plugin.ssp.htmlCallSetBox = '<a onclick="window.plugin.ssp.manualOpt();return false;">Bookmarks Opt</a>';
+    plugin.ssp.htmlMoveBtn = '<a id="bookmarksMove" class="btn" onclick="window.plugin.ssp.moveMode();return false;">Show/Hide "Move" button</a>'
 
     var actions = '';
     actions += '<a onclick="window.plugin.ssp.optReset();return false;">Reset bookmarks</a>';
@@ -1238,11 +1238,11 @@ window.plugin.ssp.loadStorageBox = function() {
     actions += '<a onclick="window.plugin.ssp.optExport();return false;">Export bookmarks</a>';
 
     actions += '<a onclick="window.plugin.ssp.optRenameF();return false;">Rename Folder</a>'
-    if(!plugin.bookmarks.isAndroid()) {
+    if(!plugin.ssp.isAndroid()) {
       actions += '<a onclick="window.plugin.ssp.optBox(\'save\');return false;">Save box position</a>';
       actions += '<a onclick="window.plugin.ssp.optBox(\'reset\');return false;">Reset box position</a>';
     }
-    plugin.bookmarks.htmlSetbox = '<div id="bkmrksSetbox">' + actions + '</div>';
+    plugin.ssp.htmlSetbox = '<div id="bkmrksSetbox">' + actions + '</div>';
   }
 
 /***************************************************************************************************************************************************************/
@@ -1271,7 +1271,7 @@ window.plugin.ssp.initMPE = function(){
       window.plugin.ssp.createStorage();
       // Load Storage
       window.plugin.ssp.loadStorage();
-      // window.plugin.bookmarks.saveStorage();
+      // window.plugin.ssp.saveStorage();
 
       // Delete and Regenerate Bookmark Lists
       window.plugin.ssp.refreshBkmrks();
@@ -1326,8 +1326,8 @@ window.plugin.ssp.initMPE = function(){
     $('#toolbox').append(window.plugin.ssp.htmlCallSetBox+window.plugin.ssp.htmlCalldrawBox);
 
     if(window.plugin.ssp.isSmart) {
-//      $('#bookmarksBox.mobile #topBar').prepend(window.plugin.bookmarks.htmlCallSetBox+window.plugin.bookmarks.htmlCalldrawBox); // wonk in progress
-      $('#bookmarksBox.mobile #topBar').append(plugin.bookmarks.htmlMoveBtn);
+//      $('#bookmarksBox.mobile #topBar').prepend(window.plugin.ssp.htmlCallSetBox+window.plugin.ssp.htmlCalldrawBox); // wonk in progress
+      $('#bookmarksBox.mobile #topBar').append(plugin.ssp.htmlMoveBtn);
     }
 
     window.plugin.ssp.loadList('maps');
