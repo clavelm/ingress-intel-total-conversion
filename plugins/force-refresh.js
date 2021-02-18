@@ -5,11 +5,11 @@
 // @description    Reload intel data without refreshing the page.
 
 
-window.plugin.forceRefresh = function() {
+const setup = function() {
     const container = L.DomUtil.create('div', 'leaflet-control');
     const toolbar = L.DomUtil.create('div', 'leaflet-bar');
     const button = L.DomUtil.create('a', 'leaflet-refresh');
-    
+
     button.innerText = '🗘';
     button.onclick = function() {
         idleReset();
