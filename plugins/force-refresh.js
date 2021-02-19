@@ -12,10 +12,7 @@ const setup = function() {
 
     button.innerText = '↻';
     button.onclick = function() {
-        idleReset();
-        window.mapDataRequest.cache = new DataCache();
-        window.mapDataRequest.refresh();
-        window.mapDataRequest.processRequestQueue();
+        window.idleReset();
     };
 
     toolbar.appendChild(button);
