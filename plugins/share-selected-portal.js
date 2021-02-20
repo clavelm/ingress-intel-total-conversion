@@ -1,7 +1,7 @@
 // @author         Mathieu CLAVEL
 // @name           Share selected portal
 // @category       Controls
-// @version        0.1.0
+// @version        0.1.1
 // @description    Add a share link when a portal is selected
 
 // use own namespace for plugin
