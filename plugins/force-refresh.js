@@ -10,10 +10,10 @@ window.plugin.forceRefresh.onRefreshClick = function() {
   window.idleReset();
 }
 
-const setup = function() {
-    const container = L.DomUtil.create('div', 'leaflet-control');
-    const toolbar = L.DomUtil.create('div', 'leaflet-bar');
-    const button = L.DomUtil.create('a', 'leaflet-refresh');
+var setup = function() {
+  var container = L.DomUtil.create('div', 'leaflet-control');
+  var toolbar = L.DomUtil.create('div', 'leaflet-bar');
+  var button = L.DomUtil.create('a', 'leaflet-refresh');
 
     button.innerText = '↻';
     button.onclick = window.plugin.forceRefresh.onRefreshClick;
