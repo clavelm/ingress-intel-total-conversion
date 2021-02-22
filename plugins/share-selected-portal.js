@@ -22,7 +22,7 @@ window.plugin.ssp.onPortalDetailsUpdated = function() {
 
   const posOnClick = window.showPortalPosLinks.bind(this, lat, lng, title);
 
-  const shareLink = $('<a>', { class: 'shareLink' }).text('Share portal').click(posOnClick);
+  const shareLink = $('<a>', { class: 'shareLink' }).text('⇛').click(posOnClick);
 
   // Prepend the share link to mobile status-bar
   $('#updatestatus').prepend(shareLink);
