@@ -6,15 +6,17 @@
 
 window.plugin.forceRefresh = function() {};
 
+window.plugin.forceRefresh.onRefreshClick = function() {
+  window.idleReset();
+}
+
 const setup = function() {
     const container = L.DomUtil.create('div', 'leaflet-control');
     const toolbar = L.DomUtil.create('div', 'leaflet-bar');
     const button = L.DomUtil.create('a', 'leaflet-refresh');
 
     button.innerText = '↻';
-    button.onclick = function() {
-        window.idleReset();
-    };
+    button.onclick = window.plugin.forceRefresh.onRefreshClick;
 
     toolbar.appendChild(button);
     container.appendChild(toolbar);
