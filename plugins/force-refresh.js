@@ -4,6 +4,7 @@
 // @version        0.2.3
 // @description    Reload intel data without refreshing the page.
 
+window.plugin.forceRefresh = function() {};
 
 const setup = function() {
     const container = L.DomUtil.create('div', 'leaflet-control');
