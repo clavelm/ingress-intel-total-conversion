@@ -9,7 +9,6 @@ window.plugin.ssp = function() {};
 
 // Append a share link in sidebar.
 window.plugin.ssp.onPortalDetailsUpdated = function() {
-  $('.shareLink').remove();
 
   const portalGuid = window.selectedPortal;
 
@@ -31,10 +30,15 @@ window.plugin.ssp.onPortalDetailsUpdated = function() {
 
 }
 
+window.plugin.ssp.onPortalSelected = function() {
+  $('.shareLink').remove();
+}
+
 const setup = function() {
 
   if (typeof android !== 'undefined' && android && android.intentPosLink) {
     window.addHook('portalDetailsUpdated', window.plugin.ssp.onPortalDetailsUpdated);
+    window.addHook('portalSelected', window.plugin.ssp.onPortalSelected);
   }
 
 };
