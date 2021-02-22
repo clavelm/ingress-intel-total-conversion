@@ -8,6 +8,9 @@ window.plugin.forceRefresh = function() {};
 
 window.plugin.forceRefresh.onRefreshClick = function() {
   window.idleReset();
+  window.mapDataRequest.cache = new DataCache();
+  window.mapDataRequest.refresh();
+  window.mapDataRequest.processRequestQueue();
 }
 
 var setup = function() {
