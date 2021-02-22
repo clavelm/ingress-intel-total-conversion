@@ -15,11 +15,8 @@ var setup = function() {
   var toolbar = L.DomUtil.create('div', 'leaflet-bar');
   var button = L.DomUtil.create('a', 'leaflet-refresh');
 
-    button.innerText = '↻';
-    button.onclick = window.plugin.forceRefresh.onRefreshClick;
-
-    toolbar.appendChild(button);
-    container.appendChild(toolbar);
-
-    document.querySelector('.leaflet-top.leaflet-left').appendChild(container);
+  $(button).text("↻").on('click', window.plugin.forceRefresh.onRefreshClick)
+           .appendTo(toolbar)
+           .parent().appendTo(container)
+           .parent().appendTo('.leaflet-top.leaflet-left');
 };
