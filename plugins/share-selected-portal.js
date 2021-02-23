@@ -7,6 +7,10 @@
 // use own namespace for plugin
 window.plugin.ssp = function() {};
 
+window.plugin.ssp.shareLink = $('<a>')
+  .addClass('shareLink')
+  .text('⇛');
+
 // Append a share link in sidebar.
 window.plugin.ssp.onPortalDetailsUpdated = function() {
 
@@ -22,16 +26,15 @@ window.plugin.ssp.onPortalDetailsUpdated = function() {
 
   var posOnClick = window.showPortalPosLinks.bind(this, lat, lng, title);
 
-  var shareLink = $('<a>', { class: 'shareLink' }).text('⇛').on('click', posOnClick);
+  window.plugin.ssp.shareLink.off('click').on('click', posOnClick);
 
   // Prepend the share link to mobile status-bar
-  $('#updatestatus').prepend(shareLink);
-  $('#updatestatus .shareLink').attr('title', '');
+  $('#updatestatus').prepend(window.plugin.ssp.shareLink);
 
 }
 
 window.plugin.ssp.onPortalSelected = function() {
-  $('.shareLink').remove();
+  window.plugin.ssp.shareLink.remove();
 }
 
 var setup = function() {
