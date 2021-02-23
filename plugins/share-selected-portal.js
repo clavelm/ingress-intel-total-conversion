@@ -10,19 +10,19 @@ window.plugin.ssp = function() {};
 // Append a share link in sidebar.
 window.plugin.ssp.onPortalDetailsUpdated = function() {
 
-  const portalGuid = window.selectedPortal;
+  var portalGuid = window.selectedPortal;
 
   if(portalGuid == null) return;
 
-  const data = window.portals[portalGuid].options.data;
+  var data = window.portals[portalGuid].options.data;
 
-  const lat = data.latE6 / 1E6;
-  const lng = data.lngE6 / 1E6;
-  const title = (data && data.title) || 'null';
+  var lat = data.latE6 / 1E6;
+  var lng = data.lngE6 / 1E6;
+  var title = (data && data.title) || 'null';
 
-  const posOnClick = window.showPortalPosLinks.bind(this, lat, lng, title);
+  var posOnClick = window.showPortalPosLinks.bind(this, lat, lng, title);
 
-  const shareLink = $('<a>', { class: 'shareLink' }).text('⇛').click(posOnClick);
+  var shareLink = $('<a>', { class: 'shareLink' }).text('⇛').click(posOnClick);
 
   // Prepend the share link to mobile status-bar
   $('#updatestatus').prepend(shareLink);
@@ -34,7 +34,7 @@ window.plugin.ssp.onPortalSelected = function() {
   $('.shareLink').remove();
 }
 
-const setup = function() {
+var setup = function() {
 
   if (typeof android !== 'undefined' && android && android.intentPosLink) {
     window.addHook('portalDetailsUpdated', window.plugin.ssp.onPortalDetailsUpdated);
