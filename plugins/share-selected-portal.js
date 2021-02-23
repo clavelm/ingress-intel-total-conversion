@@ -9,7 +9,13 @@ window.plugin.ssp = function() {};
 
 window.plugin.ssp.shareLink = $('<a>')
   .addClass('shareLink')
-  .text('⇛');
+  .text('⇛')
+  .css('display', 'inline-block')
+  .css('float', 'left')
+  .css('margin', '3px 1px 0 4px')
+  .css('width', '16px')
+  .css('height', '15px')
+  .css('overflow', 'hidden');
 
 // Append a share link in sidebar.
 window.plugin.ssp.onPortalDetailsUpdated = function() {
