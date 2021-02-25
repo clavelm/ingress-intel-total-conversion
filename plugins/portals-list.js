@@ -1,7 +1,7 @@
 // @author         teo96
 // @name           Portals list
 // @category       Info
-// @version        0.2.2
+// @version        0.3.0
 // @description    Display a sortable list of all visible portals with full details about the team, resonators, links, etc.
 
 
@@ -14,7 +14,21 @@ window.plugin.portalslist.sortOrder = -1;
 window.plugin.portalslist.enlP = 0;
 window.plugin.portalslist.resP = 0;
 window.plugin.portalslist.neuP = 0;
+window.plugin.portalslist.visitedP = 0;
+window.plugin.portalslist.capturedP = 0;
+window.plugin.portalslist.scoutControlledP = 0;
+
 window.plugin.portalslist.filter = 0;
+
+window.plugin.portalslist.historyCodePoints =[];
+[0x026AA, // white dot
+ 0x1F7E1, // yellow dot
+ 0x02B55, // red empty dot (should never show)
+ 0x1F534, // red dot
+ 0x1F7E3  // violet dot
+ ].forEach (function (value) {
+   window.plugin.portalslist.historyCodePoints.push(String.fromCodePoint(value))
+});
 
 /*
  * plugins may add fields by appending their specifiation to the following list. The following members are supported:
@@ -34,6 +48,15 @@ window.plugin.portalslist.filter = 0;
  *     Which order should by default be used for this column. -1 means descending. Default: 1
  */
 
+window.plugin.portalslist.visitedValue = function (guid){
+  var info = window.portals[guid].options.data.history;
+  return ((info) ? (info.visited + info.captured * 2) : 0);
+}
+
+window.plugin.portalslist.scoutControlledValue = function(guid) {
+  var info = window.portals[guid].options.data.history
+  return ((info) ? (info.scoutControlled * 4) : 0);
+}
 
 window.plugin.portalslist.fields = [
   {
@@ -134,6 +157,24 @@ window.plugin.portalslist.fields = [
     },
     defaultOrder: -1,
   },
+  { 
+    title: "V/C",
+    value: function(portal) { return window.plugin.portalslist.visitedValue(portal.options.guid); },
+    format: function(cell, portal, value) {
+      $(cell).addClass("portal-list-history alignC");
+      cell.append(window.plugin.portalslist.historyCodePoints[value]);
+    }
+  },
+  {
+    title: "S",
+    value: function(portal) { 
+      return window.plugin.portalslist.scoutControlledValue(portal.options.guid);
+    },
+    format: function(cell, portal, value) {
+      $(cell).addClass("portal-list-history allingC");
+      cell.append(window.plugin.portalslist.historyCodePoints[value]);
+    }
+  }
 ];
 
 //fill the listPortals array with portals avaliable on the map (level filtered portals will not appear in the table)
@@ -168,6 +209,9 @@ window.plugin.portalslist.getPortals = function() {
       default:
         window.plugin.portalslist.neuP++;
     }
+    if (portal.options.data.history.visited) window.plugin.portalslist.visitedP++;
+    if (portal.options.data.history.captured) window.plugin.portalslist.capturedP++;
+    if (portal.options.data.history.scoutControlled) window.plugin.portalslist.scoutControlledP++;
 
     // cache values and DOM nodes
     var obj = { portal: portal, values: [], sortValues: [] };
@@ -208,6 +252,9 @@ window.plugin.portalslist.displayPL = function() {
   window.plugin.portalslist.enlP = 0;
   window.plugin.portalslist.resP = 0;
   window.plugin.portalslist.neuP = 0;
+  window.plugin.portalslist.visitedP = 0;
+  window.plugin.portalslist.capturedP = 0;
+  window.plugin.portalslist.scoutControlledP = 0;
   window.plugin.portalslist.filter = 0;
 
   if (window.plugin.portalslist.getPortals()) {
@@ -238,6 +285,7 @@ window.plugin.portalslist.portalTable = function(sortBy, sortOrder, filter) {
   var portals = window.plugin.portalslist.listPortals;
   var sortField = window.plugin.portalslist.fields[sortBy];
 
+
   portals.sort(function(a, b) {
     var valueA = a.sortValues[sortBy];
     var valueB = b.sortValues[sortBy];
@@ -257,9 +305,19 @@ window.plugin.portalslist.portalTable = function(sortBy, sortOrder, filter) {
 
   if(filter !== 0) {
     portals = portals.filter(function(obj) {
-      return filter < 0
-        ? obj.portal.options.team+1 != -filter
-        : obj.portal.options.team+1 == filter;
+      if (Math.abs(filter) <= 3) {
+        return filter < 0
+          ? obj.portal.options.team+1 != -filter
+          : obj.portal.options.team+1 == filter;
+      }
+      switch (filter) {
+        case 4: return obj.portal.options.data.history.visited;
+        case 5: return obj.portal.options.data.history.captured;
+        case 6: return obj.portal.options.data.history.scoutControlled;
+        case -4: return !obj.portal.options.data.history.visited;
+        case -5: return !obj.portal.options.data.history.captured;
+        case -6: return !obj.portal.options.data.history.scoutControlled;
+      }; 
     });
   }
 
@@ -274,35 +332,33 @@ window.plugin.portalslist.portalTable = function(sortBy, sortOrder, filter) {
 
   var length = window.plugin.portalslist.listPortals.length;
 
-  ["All", "Neutral", "Resistance", "Enlightened"].forEach(function(label, i) {
+  ["All", "Neutral", "Resistance", "Enlightened", "Visited", "Captured", "Scout controlled" ].forEach(function(label, i) {
     cell = row.appendChild(document.createElement('th'));
     cell.className = 'filter' + label.substr(0, 3);
     cell.textContent = label+':';
-    cell.title = 'Show only portals of this color';
+    cell.title = 'Show only '+label+' portals';
     $(cell).click(function() {
       $('#portalslist').empty().append(window.plugin.portalslist.portalTable(sortBy, sortOrder, i));
     });
 
+    // No 'Hide all portals'
+    if (i === 0) return;
 
     cell = row.insertCell(-1);
     cell.className = 'filter' + label.substr(0, 3);
-    if(i != 0) cell.title = 'Hide portals of this color';
+    cell.title = 'Hide '+label+' portals ';
     $(cell).click(function() {
       $('#portalslist').empty().append(window.plugin.portalslist.portalTable(sortBy, sortOrder, -i));
     });
 
-    switch(i-1) {
-      case -1:
-        cell.textContent = length;
-        break;
-      case 0:
-        cell.textContent = window.plugin.portalslist.neuP + ' (' + Math.round(window.plugin.portalslist.neuP/length*100) + '%)';
-        break;
-      case 1:
-        cell.textContent = window.plugin.portalslist.resP + ' (' + Math.round(window.plugin.portalslist.resP/length*100) + '%)';
-        break;
-      case 2:
-        cell.textContent = window.plugin.portalslist.enlP + ' (' + Math.round(window.plugin.portalslist.enlP/length*100) + '%)';
+    var name = ['neuP', 'resP', 'enlP', 'visitedP', 'capturedP', 'scoutControlledP'][i-1];
+    var count = window.plugin.portalslist[name];
+    cell.textContent = count + ' (' + Math.round(count/length*100) + '%)';
+
+    if (i == 3) {
+      // create a new row with an empty first cell
+       row = table.insertRow(-1);
+       cell = row.insertCell(-1); cell.textContent = (" ");
     }
   });
 
@@ -348,7 +404,10 @@ window.plugin.portalslist.portalTable = function(sortBy, sortOrder, filter) {
   });
 
   container.append('<div class="disclaimer">Click on portals table headers to sort by that column. '
-    + 'Click on <b>All, Neutral, Resistance, Enlightened</b> to only show portals owner by that faction or on the number behind the factions to show all but those portals.</div>');
+    + 'Click on <b>All, Neutral, Resistance, Enlightened</b> to only show portals owned '
+    + 'by that faction or on the number behind the factions to show all but those portals. '
+    + 'Click on <b>Visited, Captured or Scout controlled</b> to only show portals the user has a history for '
+    + 'or on the number to hide those. </div>');
 
   return container;
 }
